@@ -1,0 +1,16 @@
+version: "3"
+services:
+  httpd:
+    command: "/bin/bash -c \"
+      sed -i -e
+        's@#LoadModule rewrite_module modules/mod_rewrite.so@LoadModule rewrite_module modules/mod_rewrite.so@g'
+        /usr/local/apache2/conf/httpd.conf
+      && echo '<Directory \"/usr/local/apache2/htdocs\">' >> /usr/local/apache2/conf/httpd.conf
+      && echo '    AllowOverride All' >> /usr/local/apache2/conf/httpd.conf
+      && echo '</Directory>' >> /usr/local/apache2/conf/httpd.conf
+      && httpd-foreground\""
+    image: "httpd"
+    volumes:
+      - "./:/usr/local/apache2/htdocs:ro"
+    ports:
+      - "8080:80"
